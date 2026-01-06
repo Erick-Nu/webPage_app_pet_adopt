@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetAdopt - Encuentra a tu compañero ideal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #FF9800;       /* Naranja Principal */
+            --primary-dark: #F57C00;  /* Naranja Oscuro (Hover) */
+            --secondary: #FFF3E0;     /* Fondo Suave */
+            --text-dark: #1F1F39;     /* Texto Principal */
+            --text-grey: #757575;     /* Texto Secundario */
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-download {
+            background-color: var(--primary);
+            color: var(--white) !important;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-download:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 140px 8% 80px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #FFF 50%, var(--secondary) 100%);
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .badge {
+            background-color: var(--secondary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--text-grey);
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .store-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #000;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .store-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .store-icon {
+            font-size: 28px;
+        }
+
+        .store-text {
+            display: flex;
+            flex-direction: column;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+
+        .store-text span {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* --- HERO IMAGE & MOCKUP --- */
+        .hero-image {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background-color: #fff;
+            border-radius: 40px;
+            border: 12px solid #1F1F39;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Pantalla simulada de la app */
+        .app-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .app-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .card-1 {
+            top: 20%;
+            left: -20px;
+        }
+
+        .card-2 {
+            bottom: 25%;
+            right: 0px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- FEATURES --- */
+        .features {
+            padding: 100px 8%;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 24px;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 152, 0, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background-color: var(--secondary);
+            color: var(--primary);
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #FAFAFA;
+            padding: 60px 8% 30px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-grey);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+            }
+            
+            .hero-text {
+                margin-bottom: 60px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .navbar .nav-links {
+                display: none; /* Simplificado para el ejemplo */
+            }
+        }
+    </style>
+</head>
+<body class="landing-body">
+
+    <nav class="navbar">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M9,9A2,2 0 0,1 11,11A2,2 0 0,1 9,13A2,2 0 0,1 7,11A2,2 0 0,1 9,9M15,9A2,2 0 0,1 17,11A2,2 0 0,1 15,13A2,2 0 0,1 13,11A2,2 0 0,1 15,9M12,14.5C14.33,14.5 16.32,15.91 17.13,18C16.5,18.64 15.68,19 14.77,19H9.23C8.32,19 7.5,18.64 6.87,18C7.68,15.91 9.67,14.5 12,14.5Z" />
+            </svg>
+            PetAdopt
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#features">Cómo Funciona</a></li>
+            <li><a href="#">Fundaciones</a></li>
+            <li><a href="#" class="btn-download">Descargar App</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text">
+            <span class="badge">🐱 Nueva Versión 1.0</span>
+            <h1>Dale un hogar,<br> recibe amor <span>incondicional.</span></h1>
+            <p>Conecta con fundaciones cercanas y encuentra al perro o gato que ha estado esperando por ti. Adopción segura, rápida y llena de amor.</p>
+            
+            <div class="hero-buttons">
+                <a href="#" class="store-btn">
+                    <span class="store-icon">🍎</span>
+                    <div class="store-text">
+                        Download on the
+                        <span>App Store</span>
+                    </div>
+                </a>
+                <a href="#" class="store-btn">
+                    <span class="store-icon">🤖</span>
+                    <div class="store-text">
+                        GET IT ON
+                        <span>Google Play</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <div class="phone-mockup">
+                <div class="app-screen">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3047/3047928.png" width="100" alt="Dog">
+                    <h3 style="color:#333; margin-top:10px;">PetAdopt</h3>
+                    <p style="font-size:12px;">Buscando amigos...</p>
+                    <div style="margin-top:20px; width:80%; height:8px; background:#eee; border-radius:4px; overflow:hidden;">
+                        <div style="width:60%; height:100%; background:var(--primary);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="floating-card card-1">
+                <span style="font-size: 24px; color: var(--primary);">🏠</span>
+                <div>
+                    <strong>+500 Adopciones</strong>
+                    <p style="font-size: 10px; margin: 0; color: grey;">Este mes</p>
+                </div>
+            </div>
+
+            <div class="floating-card card-2">
+                <span style="font-size: 24px; color: #4CAF50;">✅</span>
+                <div>
+                    <strong>Verificados</strong>
+                    <p style="font-size: 10px; margin: 0; color: grey;">Perfiles seguros</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <h2 class="section-title">¿Por qué usar PetAdopt?</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-box">🛡️</div>
+                <h3>Seguridad Total</h3>
+                <p>Verificamos todas las fundaciones y adoptantes para garantizar un proceso seguro y transparente para las mascotas.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="icon-box">🩺</div>
+                <h3>Historial Médico</h3>
+                <p>Accede a la ficha médica completa: vacunas, esterilización y cuidados especiales antes de adoptar.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="icon-box">💌</div>
+                <h3>Seguimiento</h3>
+                <p>Mantén contacto con la fundación y comparte el progreso de tu nueva mascota a través de nuestro chat integrado.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Términos y Condiciones</a>
+            <a href="#">Política de Privacidad</a>
+            <a href="#">Soporte</a>
+            <a href="/reset-password.html" style="color: var(--primary);">Recuperar Contraseña</a>
+        </div>
+        <p class="copyright">© 2024 PetAdopt Inc. Todos los derechos reservados. Hecho con 🧡 para los animales.</p>
+    </footer>
+
+</body>
+</html>

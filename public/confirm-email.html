@@ -4,57 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmación | PetAdopt</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            background: #FFF3E0; 
-        }
-        .card { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            text-align: center; 
-            max-width: 400px; 
-            width: 90%; 
-        }
-        .hidden { display: none; }
+        body { font-family: 'Poppins', sans-serif; background: #FFF3E0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
         h1 { color: #FF9800; margin-bottom: 10px; }
-        p { color: #555; line-height: 1.5; }
+        p { color: #555; margin-bottom: 20px; }
+        .hidden { display: none; }
+        .btn { padding: 12px 24px; background: #FF9800; color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
         
-        .btn { 
-            display: inline-block; 
-            padding: 14px 28px; 
-            background: #FF9800; 
-            color: white; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            margin-top: 25px; 
-            cursor: pointer; 
-            border: none; 
-            font-size: 16px; 
-            font-weight: bold; 
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.05); background: #F57C00; }
-        
-        /* Animación de carga simple */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #FF9800;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #FF9800; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -69,13 +29,13 @@
 
         <div id="successState" class="hidden">
             <h1 style="color: #4CAF50;">¡Correo Confirmado!</h1>
-            <p>Tu cuenta ha sido activada exitosamente.<br>Ya puedes iniciar sesión en la App.</p>
+            <p>Tu cuenta ha sido activada.<br>Ya puedes iniciar sesión en la App.</p>
             <button onclick="redirectToHome()" class="btn">Volver al Inicio</button>
         </div>
 
         <div id="errorState" class="hidden">
-            <h1 style="color: #F44336;">Enlace Expirado</h1>
-            <p>El enlace no es válido o ya fue utilizado anteriormente.</p>
+            <h1 style="color: #F44336;">Error</h1>
+            <p id="errorMsg">El enlace no es válido.</p>
             <button onclick="redirectToHome()" class="btn" style="background:#757575">Ir al Inicio</button>
         </div>
     </div>
@@ -86,39 +46,39 @@
 
     <script>
         window.onload = async () => {
-            const params = new URLSearchParams(window.location.search);
-            const errorDescription = params.get('error_description');
-            
-            const loader = document.getElementById('loadingState');
-            const success = document.getElementById('successState');
-            const fail = document.getElementById('errorState');
+            const loadingState = document.getElementById('loadingState');
+            const successState = document.getElementById('successState');
+            const errorState = document.getElementById('errorState');
+            const errorMsg = document.getElementById('errorMsg');
 
             try {
-                // 1. Inicializar Supabase llamando a app.js
-                // Esto es necesario para que la librería procese el hash de la URL automáticamente
+                // 1. Iniciar Supabase
                 const supabase = await getSupabase();
-                
-                // Pequeño delay visual
-                await new Promise(r => setTimeout(r, 1500));
-                
-                loader.style.display = 'none';
+                if (!supabase) throw new Error("Error de conexión.");
 
-                if (errorDescription) {
-                    fail.classList.remove('hidden');
-                } else {
-                    // Si llegamos aquí sin errores en la URL, Supabase probablemente ya manejó el token
-                    success.classList.remove('hidden');
-                    
-                    // Efecto de confeti
-                    if(typeof confetti === 'function') {
-                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                    }
-                }
+                // 2. Obtener parámetros URL
+                const params = new URLSearchParams(window.location.search);
+                const code = params.get('code');
+                const errorDesc = params.get('error_description');
 
-            } catch (e) {
-                console.error(e);
-                loader.style.display = 'none';
-                fail.classList.remove('hidden');
+                if (errorDesc) throw new Error("El enlace ha expirado.");
+                if (!code) throw new Error("Enlace incompleto.");
+
+                // 3. Canjear el código (Igual que en reset password)
+                const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+                if (error) throw error;
+
+                // 4. Éxito
+                loadingState.style.display = 'none';
+                successState.classList.remove('hidden');
+                
+                if(typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+            } catch (err) {
+                loadingState.style.display = 'none';
+                errorMsg.textContent = err.message || "No se pudo confirmar.";
+                errorState.classList.remove('hidden');
             }
         };
     </script>

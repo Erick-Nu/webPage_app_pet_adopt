@@ -3,532 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación Exitosa | PetAdopt</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+    <title>Confirmación | PetAdopt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --primary: #FF9800;
-            --primary-dark: #F57C00;
-            --primary-light: #FFB74D;
-            --text-dark: #1F1F39;
-            --text-medium: #4A4A68;
-            --text-light: #757575;
-            --success: #4CAF50;
-            --error: #F44336;
-            --bg-light: #FAFAFA;
-            --white: #FFFFFF;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 16px 48px rgba(255, 152, 0, 0.12);
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background: #FFF3E0; 
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            text-align: center; 
+            max-width: 400px; 
+            width: 90%; 
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #FFF8E1 0%, #FFFFFF 50%, #FFE0B2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow-x: hidden;
-            padding: 20px;
+        .hidden { display: none; }
+        h1 { color: #FF9800; margin-bottom: 10px; }
+        p { color: #555; line-height: 1.5; }
+        
+        .btn { 
+            display: inline-block; 
+            padding: 14px 28px; 
+            background: #FF9800; 
+            color: white; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            margin-top: 25px; 
+            cursor: pointer; 
+            border: none; 
+            font-size: 16px; 
+            font-weight: bold; 
+            transition: transform 0.2s;
         }
-
-        .background-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FF9800' fill-opacity='0.03'%3E%3Ccircle cx='25' cy='25' r='3'/%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3Ccircle cx='30' cy='20' r='2'/%3E%3Ccircle cx='18' cy='28' r='2'/%3E%3Ccircle cx='32' cy='28' r='2'/%3E%3Cellipse cx='25' cy='33' rx='5' ry='6'/%3E%3C/g%3E%3C/svg%3E");
-            z-index: 0;
-            animation: patternMove 60s linear infinite;
-        }
-
-        @keyframes patternMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(80px, 80px); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 540px;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 32px;
-            box-shadow: var(--shadow-lg);
-            padding: 60px 50px;
-            text-align: center;
-            border: 1px solid rgba(255, 152, 0, 0.08);
-            transform: translateY(40px) scale(0.95);
-            opacity: 0;
-            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .card.visible {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-
-        .icon-wrapper {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 30px;
-            position: relative;
-        }
-
-        .icon-circle {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        .btn:hover { transform: scale(1.05); background: #F57C00; }
+        
+        /* Animación de carga simple */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF9800;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 32px rgba(255, 152, 0, 0.25);
-            animation: iconPulse 3s ease-in-out infinite;
-            position: relative;
-        }
-
-        .icon-circle::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-            opacity: 0.3;
-            animation: ripple 2s ease-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes ripple {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.4); opacity: 0; }
-        }
-
-        .icon-circle svg {
-            width: 70px;
-            height: 70px;
-            color: white;
-            position: relative;
-            z-index: 1;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-        }
-
-        h1 {
-            color: var(--text-dark);
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0 0 16px 0;
-            letter-spacing: -0.8px;
-            line-height: 1.2;
-        }
-
-        p {
-            color: var(--text-medium);
-            font-size: 17px;
-            line-height: 1.7;
-            margin: 0 0 40px 0;
-            max-width: 420px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        p.subtitle {
-            font-size: 15px;
-            color: var(--text-light);
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            text-decoration: none;
-            padding: 18px 48px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 16px;
-            box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-            max-width: 320px;
-            cursor: pointer;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(255, 152, 0, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--bg-light);
-            color: var(--text-dark);
-            box-shadow: var(--shadow-md);
-            border: 2px solid rgba(0, 0, 0, 0.06);
-        }
-
-        .btn-secondary:hover {
-            background: #F5F5F5;
-            box-shadow: var(--shadow-md);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-
-        .btn svg {
-            transition: transform 0.3s ease;
-        }
-
-        .btn:hover svg {
-            transform: translateX(4px);
-        }
-
-        .loader-wrapper {
-            margin-bottom: 40px;
-        }
-
-        .spinner {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .spinner-circle {
-            width: 100%;
-            height: 100%;
-            border: 4px solid rgba(255, 152, 0, 0.1);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .spinner-inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
-
-        .spinner-inner svg {
-            width: 100%;
-            height: 100%;
-            color: var(--primary);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        .hidden { 
-            display: none !important; 
-        }
-
-        .error-icon {
-            background: linear-gradient(135deg, #FF5252, #F44336) !important;
-        }
-
-        .error-title { 
-            color: var(--error);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 24px;
-            color: var(--success);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .status-badge svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .status-badge.error {
-            background: rgba(244, 67, 54, 0.1);
-            border-color: rgba(244, 67, 54, 0.2);
-            color: var(--error);
-        }
-
-        @media (max-width: 600px) {
-            .card {
-                padding: 40px 30px;
-                border-radius: 24px;
-            }
-
-            h1 {
-                font-size: 26px;
-            }
-
-            p {
-                font-size: 15px;
-            }
-
-            .icon-circle {
-                width: 120px;
-                height: 120px;
-            }
-
-            .icon-circle svg {
-                width: 60px;
-                height: 60px;
-            }
-
-            .btn {
-                padding: 16px 36px;
-                font-size: 15px;
-            }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="background-pattern"></div>
-
-    <div class="container">
-        
-        <!-- ESTADO: CARGANDO -->
-        <div id="loadingState" class="card visible">
-            <div class="loader-wrapper">
-                <div class="spinner">
-                    <div class="spinner-circle"></div>
-                    <div class="spinner-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                            <path d="M12 9v4M12 17h.01"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <h1>Verificando tu cuenta</h1>
-            <p>Estamos confirmando tu correo electrónico.<br>Solo tomará un momento...</p>
+    <div class="card">
+        <div id="loadingState">
+            <div class="loader"></div>
+            <h1>Verificando...</h1>
+            <p>Estamos confirmando tu cuenta.</p>
         </div>
 
-        <!-- ESTADO: ÉXITO -->
-        <div id="successState" class="card hidden">
-            <div class="icon-wrapper">
-                <div class="icon-circle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="status-badge">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                </svg>
-                <span>Cuenta Verificada</span>
-            </div>
-            
-            <h1>¡Bienvenido a PetAdopt!</h1>
-            <p class="subtitle">Tu correo electrónico ha sido confirmado exitosamente</p>
-            <p>Ya puedes comenzar a explorar todas las funcionalidades de nuestra plataforma. Encuentra o ayuda a un amigo peludo a encontrar su hogar ideal.</p>
-            
-            <button onclick="goToHome()" class="btn">
-                <span>Ir a la Página Principal</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </button>
+        <div id="successState" class="hidden">
+            <h1 style="color: #4CAF50;">¡Correo Confirmado!</h1>
+            <p>Tu cuenta ha sido activada exitosamente.<br>Ya puedes iniciar sesión en la App.</p>
+            <button onclick="redirectToHome()" class="btn">Volver al Inicio</button>
         </div>
 
-        <!-- ESTADO: ERROR -->
-        <div id="errorState" class="card hidden">
-            <div class="icon-wrapper">
-                <div class="icon-circle error-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="15" y1="9" x2="9" y2="15"/>
-                        <line x1="9" y1="9" x2="15" y2="15"/>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="status-badge error">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg>
-                <span>Error de Verificación</span>
-            </div>
-            
-            <h1 class="error-title">No pudimos verificar tu cuenta</h1>
-            <p class="subtitle">El enlace ha expirado o ya fue utilizado</p>
-            <p id="errorMessage">Por favor, intenta registrarte nuevamente o solicita un nuevo enlace de confirmación desde la aplicación.</p>
-            
-            <button onclick="goToHome()" class="btn btn-secondary">
-                <span>Volver al Inicio</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </button>
+        <div id="errorState" class="hidden">
+            <h1 style="color: #F44336;">Enlace Expirado</h1>
+            <p>El enlace no es válido o ya fue utilizado anteriormente.</p>
+            <button onclick="redirectToHome()" class="btn" style="background:#757575">Ir al Inicio</button>
         </div>
-
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="/app.js"></script>
+
     <script>
-        // --- VERIFICACIÓN DE CONFIRMACIÓN DE EMAIL ---
         window.onload = async () => {
-            // Extraer parámetros de la URL
-            const hash = window.location.hash;
             const params = new URLSearchParams(window.location.search);
             const errorDescription = params.get('error_description');
-            const error = params.get('error');
-            const accessToken = params.get('access_token') || (hash && hash.includes('access_token'));
-            const type = params.get('type');
-
-            // Elementos DOM
+            
             const loader = document.getElementById('loadingState');
             const success = document.getElementById('successState');
             const fail = document.getElementById('errorState');
-            const errorMsg = document.getElementById('errorMessage');
 
-            // Delay para UX mejorado
-            setTimeout(() => {
-                // Ocultar loader con animación
-                loader.classList.remove('visible');
-                setTimeout(() => loader.classList.add('hidden'), 700);
+            try {
+                // 1. Inicializar Supabase llamando a app.js
+                // Esto es necesario para que la librería procese el hash de la URL automáticamente
+                const supabase = await getSupabase();
+                
+                // Pequeño delay visual
+                await new Promise(r => setTimeout(r, 1500));
+                
+                loader.style.display = 'none';
 
-                if (errorDescription || error) {
-                    // ESTADO: ERROR
-                    showErrorState(errorDescription || error);
-                } else if (type === 'signup' || accessToken) {
-                    // ESTADO: ÉXITO
-                    showSuccessState();
+                if (errorDescription) {
+                    fail.classList.remove('hidden');
                 } else {
-                    // Sin parámetros válidos
-                    showErrorState('No se encontraron parámetros de confirmación válidos.');
+                    // Si llegamos aquí sin errores en la URL, Supabase probablemente ya manejó el token
+                    success.classList.remove('hidden');
+                    
+                    // Efecto de confeti
+                    if(typeof confetti === 'function') {
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    }
                 }
-            }, 2000);
 
-            function showSuccessState() {
-                success.classList.remove('hidden');
-                setTimeout(() => {
-                    success.classList.add('visible');
-                    triggerConfetti();
-                }, 100);
-            }
-
-            function showErrorState(message) {
-                if (message) {
-                    errorMsg.textContent = message;
-                }
+            } catch (e) {
+                console.error(e);
+                loader.style.display = 'none';
                 fail.classList.remove('hidden');
-                setTimeout(() => fail.classList.add('visible'), 100);
             }
         };
-
-        // Animación de confeti mejorada
-        function triggerConfetti() {
-            const duration = 3000;
-            const animationEnd = Date.now() + duration;
-            const colors = ['#FF9800', '#FFB74D', '#FFA726', '#FFD54F'];
-
-            (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: colors
-                });
-
-                if (Date.now() < animationEnd) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-
-            // Ráfaga final
-            setTimeout(() => {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: colors
-                });
-            }, 500);
-        }
-
-        // Redirigir a la página principal
-        function goToHome() {
-            // Animación de salida
-            const card = document.querySelector('.card.visible');
-            if (card) {
-                card.style.transform = 'translateY(-40px) scale(0.95)';
-                card.style.opacity = '0';
-            }
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 300);
-        }
     </script>
 </body>
 </html>

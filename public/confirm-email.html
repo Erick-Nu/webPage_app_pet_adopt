@@ -29,7 +29,7 @@
 
         <div id="successState" class="hidden">
             <h1 style="color: #4CAF50;">¡Correo Confirmado!</h1>
-            <p>Tu cuenta ha sido activada.<br>Ya puedes iniciar sesión en la App.</p>
+            <p id="message">Tu cuenta ha sido activada.<br>Ya puedes iniciar sesión en la App.</p>
             <button onclick="redirectToHome()" class="btn">Volver al Inicio</button>
         </div>
 
@@ -41,7 +41,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="/app.js"></script>
 
     <script>
@@ -56,7 +55,21 @@
                 const supabase = await getSupabase();
                 if (!supabase) throw new Error("Error de conexión.");
 
-                // 2. Obtener parámetros URL
+                // 2. Configurar listener para cambios de autenticación
+                supabase.auth.onAuthStateChange(async (event, session) => {
+                    if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                        // Mostrar mensaje de éxito al usuario
+                        document.getElementById('message').innerText = "¡Correo verificado con éxito! Volviendo a la app...";
+                        
+                        // Esperar 2 segundos para que el usuario lea el mensaje
+                        setTimeout(() => {
+                            // Redirección a la app móvil usando deep link
+                            window.location.href = "petadopt://login-callback";
+                        }, 2000);
+                    }
+                });
+
+                // 3. Obtener parámetros URL
                 const params = new URLSearchParams(window.location.search);
                 const code = params.get('code');
                 const errorDesc = params.get('error_description');
@@ -64,16 +77,14 @@
                 if (errorDesc) throw new Error("El enlace ha expirado.");
                 if (!code) throw new Error("Enlace incompleto.");
 
-                // 3. Canjear el código (Igual que en reset password)
+                // 4. Canjear el código (Igual que en reset password)
                 const { error } = await supabase.auth.exchangeCodeForSession(code);
 
                 if (error) throw error;
 
-                // 4. Éxito
+                // 5. Éxito
                 loadingState.style.display = 'none';
                 successState.classList.remove('hidden');
-                
-                if(typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
             } catch (err) {
                 loadingState.style.display = 'none';
